@@ -20,17 +20,19 @@ import csv
 import dbf
 
 
-def create_csv_for_automann_dot_com(csv_order_file=r'C:\Users\User\Desktop\automann.csv'):
+def create_csv_for_automann_dot_com():
     def sort_list(list_to_sort):
         return_list = sorted(list_to_sort, key=lambda d: d['Partno'])
         return return_list
 
-    def list_of_dict_to_csv(list_of_dict, file_to_use):
+    def list_of_dict_to_csv(list_of_dict, file_to_use=r'C:\Users\User\Desktop\automann.csv'):
         list_of_dict_sorted = sort_list(list_of_dict)
         fieldnames = ['Partno', 'Qty']
         with open(file_to_use, 'w+', newline="", encoding='ascii') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
             writer.writerows(list_of_dict_sorted)
+
+        return file_to_use
 
     def get_items_from_pos(po_table):
         return_list = []
@@ -58,8 +60,12 @@ def create_csv_for_automann_dot_com(csv_order_file=r'C:\Users\User\Desktop\autom
 
         items_to_order = get_items_from_pos(po_table)
 
-        list_of_dict_to_csv(items_to_order)
+        file_to_use = list_of_dict_to_csv(items_to_order)
 
         po_table.close()
 
-    start()
+        return file_to_use
+
+    file_to_use = start()
+
+    return file_to_use
